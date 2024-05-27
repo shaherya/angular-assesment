@@ -1,0 +1,21 @@
+.discount-field {
+  width: 200px;
+}
+
+.discount-field input {
+  width: 90%;
+  display: inline-block;
+}
+
+.product-image {
+  float: right;
+  max-width: 400px;
+  width: 100%;
+}
+
+.account-filter-container {
+  display: inline-block;
+  float: right;
+  margin-top: -50px;
+  margin-right: 30px;
+}

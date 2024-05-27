@@ -1,0 +1,41 @@
+<div class="table-responsive bg-white-rounded">
+  <table *ngIf="(salesPhrases$ | async)?.length" class="table mb-0">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th class="actions-column">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let salesPhrase of salesPhrases$ | async">
+      <td><span class="text-primary">{{salesPhrase.text}}</span></td>
+      <td class="td-actions">
+        <a class="action-link" href="javascript:void(0);" (click)="edit(salesPhrase)" title="Edit"><i class="la la-edit edit"></i></a>
+        <a class="action-link" href="javascript:void(0);" (click)="delete(salesPhrase.id)" title="Delete"><i class="la la-close delete"></i></a>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+  <a href="javascript:void(0);" (click)="create()" class="add-new-category-link blue-link">+ Add a New Sales Phrase</a>
+  <!-- End Default -->
+  <div>
+    <a href="javascript:void(0);" (click)="goBack()" class="btn btn-secondary back-btn-categories">Back</a>
+  </div>
+</div>
+<ngx-smart-modal
+  #editDialog
+  identifier="editDialog"
+  customClass="nsm-dialog-md nsm-centered"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">{{!!selectedSalesPhrase ? 'Edit Sales Phrase' : 'Create New Sales Phrase'}}</h4>
+  </div>
+  <div class="modal-body">
+    <sales-phrase-form
+      [data]="selectedSalesPhrase"
+      (save)="onSaveSalesPhrase($event)"
+      (cancel)="editDialog.close()"
+    ></sales-phrase-form>
+  </div>
+</ngx-smart-modal>

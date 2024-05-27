@@ -1,0 +1,24 @@
+<div class="table-responsive bg-white-rounded">
+  <div class="loader" *ngIf="loading">
+    <img src="assets/img/processing.gif" class="loader-img">
+  </div>
+  <table class="table mb-0" *ngIf="(styles$ | async)?.length > 0">
+    <thead>
+    <tr>
+      <th>Theme</th>
+      <th class="actions-column">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let style of styles$ | async">
+      <td><span class="text-primary">{{style.name}}</span></td>
+      <td class="td-actions">
+        <a class="action-link" [routerLink]="['/style', 'edit', style.id]" title="Edit"><i class="la la-edit edit"></i></a>
+        <a class="action-link" href="javascript:void(0);" (click)="delete(style.id)" title="Delete"><i class="la la-close delete"></i></a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <app-pager [page]="page" [pageCount]="pageCount" (pageChange)="onPageChange($event)"></app-pager>
+  <a [routerLink]="['/style', 'new']" class="blue-link add-new-style">+ Add a New Theme</a>
+</div>

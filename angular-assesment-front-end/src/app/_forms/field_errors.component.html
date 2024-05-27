@@ -1,0 +1,9 @@
+<div *ngFor="let e of errors" class="help is-danger">
+  <span *ngIf="e.error == 'minlength';then lengthError; else normalError"></span>
+  	<ng-template #lengthError>
+		must be at least 8 characters
+	</ng-template>
+  	<ng-template #normalError>
+		{{'errors.messages.' + e.error | translate:e.params}}
+	</ng-template>
+</div>

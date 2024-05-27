@@ -1,0 +1,29 @@
+<div class="table-responsive bg-white-rounded">
+  <div class="loader" *ngIf="loading">
+    <img src="assets/img/processing.gif" class="loader-img">
+  </div>
+  <table class="table mb-0" *ngIf="(autoresponders$ | async)?.length > 0">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th class="actions-column">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let autoresponder of autoresponders$ | async">
+        <td><span class="text-primary">{{autoresponder.name}}</span></td>
+        <td><span class="text-primary">{{autoresponder.type}}</span></td>
+
+        <td class="td-actions">
+          <a class="action-link" [routerLink]="['/autoresponder', 'edit', autoresponder.id]" title="Edit"><i
+              class="la la-edit edit"></i></a>
+          <a class="action-link" href="javascript:void(0);" (click)="delete(autoresponder.id)" title="Delete"><i
+              class="la la-close delete"></i></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <app-pager [page]="page" [pageCount]="pageCount" (pageChange)="onPageChange($event)"></app-pager>
+  <a [routerLink]="['/autoresponder', 'new']" class="blue-link add-new-style">+ Add a New Auto Responder</a>
+</div>

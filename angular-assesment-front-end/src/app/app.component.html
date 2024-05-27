@@ -1,0 +1,45 @@
+<!-- Begin Container -->
+<div [class.page]="isLoggedIn()">
+  <app-header *ngIf="isLoggedIn()"></app-header>
+  <!-- Begin Page Content -->
+  <div [class.page-content]="isLoggedIn()" [class.d-flex]="isLoggedIn()" [class.align-items-stretch]="isLoggedIn()">
+    <app-sidebar *ngIf="isLoggedIn()"></app-sidebar>
+    <!-- End Left Sidebar -->
+    <div [class.content-inner]="isLoggedIn()" [ngClass]="{'active': !isSidebarExpanded}">
+      <div [class.container-fluid]="isLoggedIn()" [class.logged-in-body]="isLoggedIn()">
+        <!-- Begin Page Header-->
+        <div *ngIf="isLoggedIn()" class="row">
+          <div class="page-header">
+            <div class="d-flex align-items-center">
+              <h2 class="page-header-title">{{title}}</h2>
+            </div>
+          </div>
+        </div>
+        <div [class.row]="isLoggedIn()" [class.flex-row]="isLoggedIn()">
+          <div [class.col-12]="isLoggedIn()">
+            <!-- Form -->
+            <app-alert *ngIf="isLoggedIn()"></app-alert>
+            <router-outlet (activate)='onActivate($event)' (deactivate)='onDeactivate($event)'></router-outlet>
+            <ngx-smart-modal
+              #changesPopup
+              identifier="changesPopup"
+              customClass="nsm-dialog-md nsm-centered"
+            >
+              <div class="modal-header">
+                <h4 class="modal-title">Save changes</h4>
+              </div>
+              <div class="modal-body">
+                Changes you made may not be saved
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" (click)="closeChangesModal()">Cancel</button>
+                <button class="btn btn-secondary" (click)="discardChanges()">Discard</button>
+                <button class="btn btn-primary" (click)="saveChanges()">Save changes</button>
+              </div>
+            </ngx-smart-modal>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

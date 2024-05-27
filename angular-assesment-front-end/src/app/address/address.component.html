@@ -1,0 +1,24 @@
+<div class="table-responsive">
+  <table class="table mb-0">
+    <thead>
+    <tr>
+      <th>Address</th>
+      <th class="actions-column">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let address of addresses$ | async">
+      <td>{{address.address1}} {{address.address2}}<br/>{{address.city}}, {{address.state}} {{address.zip}}, {{address.country}}</td>
+
+      <td class="td-actions">
+        <a [routerLink]="['/address', 'edit', address.id]" title="Edit"><i class="la la-edit edit"></i></a>
+        <a href="javascript:void(0);" (click)="delete(address.id)" title="Delete"><i class="la la-close delete"></i></a>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<a [routerLink]="['/address', 'new']">+ Add Another Address</a>
+<app-pager [page]="page" [pageCount]="pageCount" (pageChange)="onPageChange($event)"></app-pager>

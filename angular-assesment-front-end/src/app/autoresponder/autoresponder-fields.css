@@ -1,0 +1,27 @@
+.card.response-card {
+  padding: 25px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
+}
+
+.new-response-link {
+  display: flex;
+  align-items: center;
+}
+
+.response-delete-icon {
+  float: right;
+  /* margin-top: -35px; */
+  font-size: 25px;
+  color: red;
+}
+
+.fa {
+  display: inline-block;
+  font: normal normal normal 14px / 1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

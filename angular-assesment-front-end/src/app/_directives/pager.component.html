@@ -1,0 +1,16 @@
+<nav aria-label="Page navigation" class="pager-navigation">
+<ul *ngIf="pageCount > 1" class="custom-pager pagination">
+  <li class="page-item" [class.disabled]="page == 1"><a class="page-link" href="" (click)="clickPage(1, $event)">&lt;&lt;</a></li>
+  <li class="page-item" [class.disabled]="page == 1"><a class="page-link" href="" (click)="clickPage(page - 1, $event)">&lt;</a></li>
+  <li class="page-item" *ngIf="(pageNumberLinks.length > 0) && (pageNumberLinks[0] > 1)" class="disabled"><a href="#" class="page-link">...</a></li>
+
+
+  <li class="page-item" *ngFor="let pageNum of pageNumberLinks" [class.active]="pageNum == page">
+    <a class="page-link" *ngIf="page != pageNum; else current_page" href="" (click)="clickPage(pageNum, $event)">{{pageNum}}</a>
+    <ng-template #current_page><a href="#" class="page-link">{{pageNum}}</a></ng-template>
+  </li>
+  <li class="page-item" *ngIf="(pageNumberLinks.length > 0) && (pageNumberLinks[pageNumberLinks.length-1] < pageCount)" class="disabled"><span>...</span></li>
+  <li class="page-item" [class.disabled]="page == pageCount"><a class="page-link" href="" (click)="clickPage(page + 1, $event)">&gt;</a></li>
+  <li class="page-item" [class.disabled]="page == pageCount"><a class="page-link" href="" (click)="clickPage(pageCount, $event)">&gt;&gt;</a></li>
+</ul>
+</nav>

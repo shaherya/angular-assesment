@@ -1,0 +1,52 @@
+<!-- Begin Header -->
+<header class="header">
+  <nav class="navbar fixed-top" [ngClass]="{'navbar-active': !isSidebarExpanded}">
+    <!-- Begin Topbar -->
+    <div class="navbar-holder d-flex align-items-center align-middle justify-content-between">
+      <!-- Begin Logo -->
+      <div class="navbar-header" [ngClass]="{'brand-big': !isSidebarExpanded, 'brand-small': isSidebarExpanded}">
+        <!-- Toggle Button -->
+        <ul class="nav-list">
+          <li class="sidebar-shrinker-container" *ngIf="isSidebarExpanded" (click)="toggleSidebar()">
+            <img src="assets/img/SolvPath-Logo-Icon.png" alt="Solvpath logo icon" class="header-nav-shrinker">
+            <i class="ion ion-arrow-left-c sidebar-shrinker-arrow"></i>
+          </li>
+          <li><a href="javascript:void(0);" (click)="goBack()" class="menu-btn active ion ion-arrow-left-c">
+            <!-- <span></span>
+            <span></span>
+            <span></span> -->
+          </a></li>
+          <li><span><h3 *ngIf="selectedAccount" >{{selectedAccount.name}}</h3></span></li>
+          <li><breadcrumb></breadcrumb></li>
+        </ul>
+        <!-- End Toggle -->
+      </div>
+      <!-- End Logo -->
+      <!-- Begin Navbar Menu -->
+      <ul *ngIf="currentUser" class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center pull-right">
+        <!-- User -->
+        <li class="nav-item dropdown"><a id="user" rel="nofollow" data-target="#" href="#" data-toggle="dropdown"
+                                         aria-haspopup="true" aria-expanded="false" class="nav-link">
+          <svg class="icon icon-account"><use xlink:href="assets/IconsLibrary/allIcons.svg#icon-account"></use></svg>
+        </a>
+          <ul aria-labelledby="user" class="user-size dropdown-menu">
+            <li class="welcome">
+              <span class="dropdown-item">Hi {{ currentUser.first_name }}!</span>
+            </li>
+            <li class="separator"></li>
+            <li><a href="javascript:void(0);" (click)="gotoAccountPage('personal-info')" class="dropdown-item">Personal Info</a></li>
+            <li><a href="javascript:void(0);" class="dropdown-item">Change Password</a></li>
+            <!-- <li><a [routerLink]="['/user/login']" class="dropdown-item logout text-center"><i class="ti-power-off"></i> Log Out</a></li> -->
+            <li class="separator"></li>
+            <li><a href="javascript:void(0);" (click)="logout()" class="dropdown-item"><i class="ti-power-off"></i> Log
+              Out</a></li>
+          </ul>
+        </li>
+        <!-- End User -->
+      </ul>
+      <!-- End Navbar Menu -->
+    </div>
+    <!-- End Topbar -->
+  </nav>
+</header>
+<!-- End Header -->

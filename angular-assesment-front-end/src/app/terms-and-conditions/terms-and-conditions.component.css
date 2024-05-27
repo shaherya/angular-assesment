@@ -1,0 +1,50 @@
+.image-container {
+  justify-content: center;
+}
+
+.image-container img {
+  width: 280px;
+}
+
+.terms-header {
+  text-align: center;
+  margin-top: 25px;
+  font-weight: bold;
+}
+
+.license-para, .license-container > p {
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.small-headings {
+  font-weight: bold;
+}
+
+.nested-para {
+  padding-left: 15px;
+  margin-top: 10px;
+}
+
+.license-container a {
+  color: #2eb3c9;
+  text-decoration: underline;
+}
+
+.section-heading {
+  text-decoration: underline;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 100px;
+}
+
+.section-subheading {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.brand-name {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}

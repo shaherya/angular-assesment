@@ -1,0 +1,210 @@
+<div *ngIf="crms?.length" class="bg-white-rounded existing-crm">
+  <div class="loader" *ngIf="loading">
+    <img src="assets/img/processing.gif" class="loader-img">
+  </div>
+  <div class="row">
+    <div class="col-12 d-flex justify-content-between align-items-center mb-3">
+      <h4 class="subtitle mb-0">Existing Products</h4>
+    </div>
+    <form class="col-12 campaign-products-form" [formGroup]="form">
+      <div class="form-row">
+        <collapsible-list [type]="'expandable'">
+          <collapsible-list-item formGroupName="dimensions" *ngIf="fields.dimensions.length > 0">
+            <collapsible-header>
+              <div class="row">
+                <div class="col-12 d-flex align-items-center justify-content-between">
+                  <label>Dimensions</label>
+                  <div class="d-flex align-items-center">
+                    <i (click)="getCampaignProducts($event)" title="Refresh Dimensions" class="mr-3 fa fa-refresh fa-2x"></i>
+                    <i class="fa fa-angle-down fa-2x"></i>
+                  </div>
+                </div>
+              </div>
+            </collapsible-header>
+            <collapsible-body>
+              <div class="row" *ngFor="let formGroup of fields.dimensions">
+                <div class="col-md-3" *ngFor="let field of formGroup">
+                  <input [id]="field.model" type="checkbox" [formControlName]="field.model"
+                         [checked]="isBooleanFieldChecked('dimensions.' + field.model)"
+                         [tabIndex]="field.disabled ? -1: null">
+                  <label [htmlFor]="field.model">{{field.label}}</label>
+                </div>
+              </div>
+            </collapsible-body>
+          </collapsible-list-item>
+          <collapsible-list-item *ngIf="fields.filters.length > 0">
+            <collapsible-header>
+              <div class="row">
+                <div class="col-12 d-flex align-items-center justify-content-between">
+                  <label>Filters</label>
+                  <div class="d-flex align-items-center">
+                    <button href="javascript:void(0);" (click)="fetchCampaignProducts($event)" class="mr-3 btn btn-primary">Fetch Products</button>
+                    <i class="fa fa-angle-down fa-2x"></i>
+                  </div>
+                </div>
+              </div>
+            </collapsible-header>
+            <collapsible-body>
+              <div class="row" formGroupName="filters" *ngFor="let group of fields.filters">
+                <div class="col-md-3" *ngFor="let field of group">
+                  <div>
+                    <input [id]="'filter-' + field.model" type="checkbox" [formControlName]="field.model"
+                           [checked]="isBooleanFieldChecked('filters.' + field.model)"
+                           [ngClass]="{'disabled': field.disabled}" [tabIndex]="field.disabled? -1: null"
+                           (change)="toggleBooleanField($event, 'filters.' + field.model)">
+                    <label [ngClass]="{'disabled': field.disabled}"
+                           [htmlFor]="'filter-' + field.model">{{field.label}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row filters-data-container">
+                <div class="col-12">
+                  <div class="row">
+                    <div class="form-group col-6 col-md-4 col-lg-4 existing-product-crms-dropdown">
+                      <label for="{{idPrefix}}crm">CRM</label>
+                      <div class="select-wrapper">
+                        <select id="{{idPrefix}}crm" formControlName="crm" class="form-control">
+                          <option *ngIf="crms?.length > 1" [ngValue]="null">All CRMs</option>
+                          <option *ngFor="let crm of crms" [value]="crm.id">{{crm.name}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 mt-4" formGroupName="filtersData" *ngIf="fields.filtersData.length > 0">
+                  <div class="row" *ngFor="let filters of fields.filtersData">
+                    <ng-container *ngIf="filters?.length > 0">
+                      <ng-container *ngFor="let field of filters">
+                        <div class="col-md-4" *ngIf="isBooleanFieldChecked('filters.' + field.filter)">
+                          <div class="filters-data">
+                            <div class="form-group">
+                              <label [htmlFor]="'filter-' + field.model" *ngIf="field.type != 'hidden-input' && field.type != 'products'">
+                                {{field.label}}
+                              </label>
+                              <input class="form-control" *ngIf="field.type === 'input'" [formControlName]="field.model" [id]="'filter-' + field.model">
+                              <input type="hidden" *ngIf="field.type === 'hidden-input'" [formControlName]="field.model" [id]="'filter-' + field.model">
+                              <div class="select-wrapper" *ngIf="field.type === 'select'">
+                                <select [id]="'filter-' + field.model" class="form-control" [formControlName]="field.model">
+                                  <option *ngFor="let option of field.options" [value]="option.value">{{option.label}}</option>
+                                </select>
+                              </div>
+                              <ng-multiselect-dropdown
+                                *ngIf="field.type === 'multi-select' && (field.options && field.options.length > 0)"
+                                [id]="'filter-' + field.model"
+                                [formControlName]="field.model"
+                                [data]="field.options"
+                                [settings]="defaultFilterSettings">
+                              </ng-multiselect-dropdown>
+                              <ng-container *ngIf="field.type === 'multi-select' && field.options?.length == 0">
+                                <ng-multiselect-dropdown
+                                  [id]="'filter-' + field.model"
+                                  [formControlName]="field.model"
+                                  [data]="filtersDynamicOptions[field.model]"
+                                  [settings]="defaultFilterSettings">
+                                </ng-multiselect-dropdown>
+                                <img *ngIf="filtersDynamicOptions[field.model]?.length < 1"
+                                     src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                              </ng-container>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </collapsible-body>
+          </collapsible-list-item>
+        </collapsible-list>
+      </div>
+    </form>
+    <div class="w-100 existing-products-datatable">
+      <ngx-datatable
+        class="material w-100 campaign-products-datatable"
+        [loadingIndicator]="loading"
+        columnMode="force"
+        headerHeight="50"
+        footerHeight="50"
+        rowHeight="50"
+        sortType="multi"
+        [rows]="(campaignProducts$ | async) || []"
+        [externalPaging]="true"
+        [externalSorting]="true"
+        [reorderable]="true"
+        [swapColumns]="false"
+        [count]="totalResultCount"
+        [offset]="page - 1"
+        [selectAllRowsOnPage]="false"
+        [limit]="pageSize"
+        (page)="ngxDataTableSetPage($event)"
+        (sort)="onNgxDataTableSort($event)"
+        [sorts]="getNgxDataTableSorts()"
+        [scrollbarH]="true"
+      >
+        <ngx-datatable-column [maxWidth]="field === 'image' ? 70 : 'auto'"  *ngFor="let field of checkedFields" [name]="getFieldLabel(field)" [prop]="field">
+          <ng-template let-row="row" ngx-datatable-cell-template class="justify-content-center">
+            <span *ngIf="showColumnWithoutLink(field)">{{getFieldValue(row, field)}}</span>
+            <span *ngIf="field === 'price' || field === 'min_price'">${{getFieldValue(row, field)}}</span>
+            <ng-container *ngIf="field === 'crm_campaign_name' || field === 'crm_campaign_id'">
+              <a *ngIf="row.crm_campaign && allCRMCampaigns[row.crm_campaign]" href="javascript:void(0);" (click)="editCRMCampaign(allCRMCampaigns[row.crm_campaign])" title="{{getFieldValue(row, field)}}">
+              {{getFieldValue(row, field)}}
+              </a>
+            </ng-container>
+            <img *ngIf="field == 'image'" class="related-product-image" [src]="getFieldValue(row, field)" alt="" />
+            <a *ngIf="field === 'name'" href="javascript:void(0);" (click)="editCampaignProduct(row)" title="{{getFieldValue(row, field)}}">{{getFieldValue(row, field)}}</a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column cellClass="existing-products-table-last-cell" [sortable]="false" [maxWidth]="75">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <a class="action-link" href="javascript:void(0);" (click)="editCampaignProduct(row)" title="Edit"><i class="la la-edit edit"></i></a>
+          </ng-template>
+        </ngx-datatable-column>
+
+      </ngx-datatable>
+
+      <div class="datatable-rows-per-page">
+        <label for="rowsperpage">Rows per page:</label>
+        <select id="rowsperpage" (change)="changeRowsPerPage($event)">
+          <option *ngFor="let item of rowsPerPageOptions" [value]="item.value" [selected]="item.value == pageSize">{{item.label}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ngx-smart-modal
+  #editCampaignProductDialog
+  identifier="editCampaignProductDialog"
+  customClass="nsm-dialog-xxl nsm-centered"
+  (onAnyCloseEvent)="onCancelEditCampaignProduct()"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Edit Campaign Product</h4>
+  </div>
+  <div class="modal-body">
+    <campaign-product-form
+      [campaignProduct]="selectedCampaignProduct"
+      (save)="onSaveCampaignProduct($event)"
+      (cancel)="editCampaignProductDialog.close()"
+    ></campaign-product-form>
+  </div>
+</ngx-smart-modal>
+
+<ngx-smart-modal
+  #editCRMCampaignDialog
+  identifier="editCRMCampaignDialog"
+  customClass="nsm-dialog-md nsm-centered"
+  (onAnyCloseEventFinished)="onCloseCRMCampaignDialog()"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Edit CRM Campaign</h4>
+  </div>
+  <div class="modal-body">
+    <crm-campaign-form
+      [data]="selectedCRMCampaign"
+      (save)="onSaveCRMCampaign($event)"
+      (cancel)="editCRMCampaignDialog.close()"
+    ></crm-campaign-form>
+  </div>
+</ngx-smart-modal>

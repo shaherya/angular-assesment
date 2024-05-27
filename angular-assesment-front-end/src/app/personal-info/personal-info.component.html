@@ -1,0 +1,27 @@
+<div class="container-fluid bg-white-rounded reports-container performance-reports-container">
+  <div class="loader" *ngIf="loading">
+    <img src="assets/img/processing.gif" class="loader-img">
+  </div>
+  <div class="row">
+    <form class="col-12" [formGroup]="form">
+      <div class="row">
+        <div class="col-12 form-group mb-3">
+          <label>First Name</label>
+          <input type="text" formControlName="first_name" placeholder="First Name" class="form-control">
+          <div class="help is-danger">{{getAppropriateError('first_name', true)}}</div>
+        </div>
+        <div class="col-12 form-group mb-3">
+          <label>Last Name</label>
+          <input type="text" formControlName="last_name" placeholder="Last Name" class="form-control">
+          <div class="help is-danger">{{getAppropriateError('last_name', true)}}</div>
+        </div>
+      </div>
+      <div class="col-12 addresses-container">
+        <h3 class="subtitle">Addresses</h3>
+        <Addresses></Addresses>
+      </div>
+      <input class="btn btn-primary" type="button" value="Save" (click)="onSubmit()">
+      <input class="btn btn-secondary" type="button" value="Cancel" (click)="goBack()">
+    </form>
+  </div>
+</div>

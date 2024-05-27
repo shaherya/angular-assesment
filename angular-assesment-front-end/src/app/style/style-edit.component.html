@@ -1,0 +1,115 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <app-form-errors [errors]="formErrors()"></app-form-errors>
+  <ngb-tabset [destroyOnHide]="false">
+
+    <ngb-tab title="Basic Settings">
+      <ng-template ngbTabContent>
+        <div class="form-group col-12 col-md-6 col-xl-6 col-lg-6 px-0">
+          <label for="name">Name</label>
+          <input id="name" type="text" class="form-control" formControlName="name" />
+          <app-field-errors [errors]="fieldErrors('name')"></app-field-errors>
+        </div>
+        <div class="form-group col-12 col-md-6 col-xl-6 col-lg-6 px-0 d-flex justify-content-between align-items-center">
+          <label for="header_enhanced_mode">Header Advance Mode</label>
+          <label class="switch">
+            <input id="header_enhanced_mode" type="checkbox" class="form-control" formControlName="header_enhanced_mode">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="form-group col-12 col-md-6 col-xl-6 col-lg-6 px-0 d-flex justify-content-between align-items-center">
+          <label for="footer_enhanced_mode">Footer Advance Mode</label>
+          <label class="switch">
+            <input id="footer_enhanced_mode" type="checkbox" class="form-control" formControlName="footer_enhanced_mode">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="variables" class="my-3 font-weight-700 edit-theme-heading">Variables</label>
+          <table id="variables">
+            <thead class="mb-3">
+            <tr>
+              <th><p>Name</p></th>
+              <th><p>Value</p></th>
+            </tr>
+            </thead>
+            <tbody formArrayName="variables">
+            <tr *ngFor="let field of variableFields; let i = index;" [formGroupName]="i.toString()">
+              <td>
+                <p>
+                  <input type="hidden" class="form-control" formControlName="name" />
+                  <label [for]="'variable-' + i.toString()">{{field.label}}</label>
+                </p>
+              </td>
+              <td>
+                <p>
+                  <input *ngIf="field.type === 'color'"
+                         class="form-control"
+                         [style.background]="getVariableValue(i)"
+                         [cpOutputFormat]="'hex'"
+                         [cpAlphaChannel]="'always'"
+                         [value]="getVariableValue(i)"
+                         [colorPicker]="getVariableValue(i)"
+                         (colorPickerChange)="setVariableValue(i, $event)"/>
+                  <select *ngIf="field.type == 'select'" class="form-control" [id]="'variable-' + i.toString()" formControlName="value">
+                    <option *ngFor="let option of field.options;" [value]="option.value">{{option.text}}</option>
+                  </select>
+                  <input *ngIf="field.type !== 'select' && field.type !== 'color' && field.type !== 'toggle'" [id]="'variable-' + i.toString()" [type]="field.type" class="form-control" formControlName="value" />
+                  <app-field-errors [errors]="fieldErrors('value')"></app-field-errors>
+                </p>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Additional Settings">
+      <ng-template *ngIf="styles" ngbTabContent>
+        <div *ngIf="salesPhrases" class="form-group">
+          <label for="sales-phrases" class="my-3 font-weight-700 edit-theme-heading">Sales Phrases</label>
+          <table id="sales-phrases">
+            <thead>
+            <tr>
+              <th> <p> Phrase </p></th>
+              <th> <p> Settings </p></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let phrase of salesPhrases">
+              <td>
+                <p><label [for]="'sales-phrase-' + phrase.id.toString()">{{phrase.text}}</label></p>
+              </td>
+              <td>
+                <table id="'sales-phrase-' + phrase.id.toString()">
+                  <tr>
+                    <td>
+                      <p><label [for]="'sales-phrase-color-' + phrase.id.toString()">Background Color</label></p>
+                    </td>
+                    <td>
+                      <input [style.background]="getSalesPhraseStyle(phrase, 'background-color')"
+                             class="form-control"
+                             [cpOutputFormat]="'hex'"
+                             [cpAlphaChannel]="'always'"
+                             [value]="getSalesPhraseStyle(phrase, 'background-color')"
+                             [colorPicker]="getSalesPhraseStyle(phrase, 'background-color')"
+                             (colorPickerChange)="setSalesPhraseStyle(phrase, 'background-color', $event)"
+                      />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+  <div class="form-group bg-white-rounded pt-0 pl-4">
+    <input type="hidden" formControlName="language" />
+    <button type="submit" [disabled]="loading" class="btn btn-primary">Save</button>
+    <img alt="Processing..." *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+    <a href="javascript:void(0);" (click)="goBack()" class="btn btn-secondary">Cancel</a>
+  </div>
+
+</form>

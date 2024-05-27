@@ -1,0 +1,42 @@
+<div class="default-sidebar">
+  <!-- Begin Side Navbar -->
+  <nav class="side-navbar box-scroll sidebar-scroll" [ngClass]="{'shrinked': !isExpanded}">
+    <div class="d-flex logo-col position-relative">
+      <div class="d-inline-flex logo-col-inside position-relative">
+        <a [routerLink]="['/']" class="align-items-center d-flex mx-auto navbar-brand sidebar-logo">
+          <div class="brand-image ">
+            <img src="assets/img/SolvPath-Logo-White.png" alt="logo" class="brand-big img-fluid mx-auto">
+            <img src="assets/img/SolvPath-Logo-Icon-White.png" alt="logo" class="brand-small img-fluid mx-auto">
+          </div>
+        </a>
+        <i class="ion ion-arrow-left-c side-bar-toggle" [ngClass]="{'side-bar-toggle-inverted': !isExpanded}"
+          (click)="toggleExpand()"></i>
+      </div>
+    </div>
+    <!-- Begin Main Navigation -->
+    <ul class="list-unstyled">
+      <li *ngIf="user && user.account"><a [routerLink]="['/']" class="dashboard-link"><i
+            class="fa fa-home"></i><span>Dashboard</span></a></li>
+      <li *ngIf="user && user.account"><a [routerLink]="['/campaigns']" class="dashboard-link"><i
+            class="fa fa-bullhorn"></i><span>Brands</span></a></li>
+      <li *ngIf="user && user.account" routerLinkActive="active"><a href="#dropdown-products" aria-expanded="false"
+          data-toggle="collapse"><i class="fa fa-shopping-basket"></i><span>Products</span></a>
+        <ul id="dropdown-products" class="collapse list-unstyled pt-0">
+          <li><a [routerLink]="['/crms']">CRMs</a></li>
+          <li><a [routerLink]="['/campaign-products']">Products</a></li>
+          <li><a [routerLink]="['/sales-phrases']">Sales Phrases</a></li>
+        </ul>
+      </li>
+      <li *ngIf="user && user.account" routerLinkActive="active"><a href="#dropdown-styles" aria-expanded="false"
+          data-toggle="collapse"><i class="fa fa-dashboard"></i><span>Design</span></a>
+        <ul id="dropdown-styles" class="collapse list-unstyled pt-0">
+          <li><a [routerLink]="['/styles']">Themes</a></li>
+        </ul>
+      </li>
+      <li *ngIf="user && user.account"><a [routerLink]="['/autoresponders']" class="dashboard-link"><i
+            class="fa fa-bullhorn"></i><span>Autoresponders</span></a></li>
+    </ul>
+    <!-- End Main Navigation -->
+  </nav>
+  <!-- End Side Navbar -->
+</div>

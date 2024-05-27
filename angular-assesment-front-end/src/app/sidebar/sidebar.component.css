@@ -1,0 +1,73 @@
+.nested-list-btn {
+  font-size: 1rem;
+  color: #edf2f5;
+  padding: 0.5rem 2.7rem;
+  text-decoration: none;
+  display: block;
+  font-weight: 500 !important;
+  background: none;
+  border: none;
+  outline: none;
+  transition: 0.3s ease-in-out;
+  position: relative;
+}
+
+.nested-list-btn:hover {
+  color: #2eb3c9;
+}
+
+.side-navbar.shrinked .nested-list-btn {
+  padding: 10px;
+  font-size: 0.7rem;
+}
+
+.nested-list {
+  padding: 0.5rem 3rem;
+}
+
+.nested-list li {
+  font-size: 1rem;
+  color: #edf2f5;
+  text-decoration: none;
+  font-weight: 500 !important;
+  transition: 0.3s ease-in-out;
+}
+
+.default-sidebar>.side-navbar button[data-toggle=collapse]::before {
+  font-size: .85rem;
+  content: '\f124';
+  display: inline-block;
+  transform: translateY(-50%);
+  font-family: ionicons;
+  position: absolute;
+  top: 50%;
+  right: -4.4rem;
+}
+
+.default-sidebar>.side-navbar button[data-toggle=collapse].nested-list-btn::before {
+  right: -3.8rem;
+}
+
+.default-sidebar>.side-navbar button[data-toggle=collapse].nested-list-btn#global-reports-toggle::before {
+  right: -2.1rem;
+}
+
+.default-sidebar>.side-navbar button[aria-expanded=true]::before {
+  content: '\f123';
+}
+
+.default-sidebar>.side-navbar.shrinked button[data-toggle=collapse]::before {
+  font-size: .85rem;
+  content: '\f123';
+  display: inline-block;
+  transform: translateY(-50%);
+  font-family: ionicons;
+  position: absolute;
+  top: auto;
+  right: 45%;
+  bottom: -15px;
+}
+
+.default-sidebar>.side-navbar.shrinked button[aria-expanded=true]::before {
+  content: '\f126';
+}

@@ -1,0 +1,136 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~ngx-smart-modal/ngx-smart-modal.css";
+
+.nsm-dialog.nsm-centered {
+  display: grid;
+}
+.nsm-dialog-lg {
+  max-width: 980px;
+}
+.nsm-dialog-xl {
+  max-width: 1200px;
+}
+.nsm-dialog-xxl {
+  max-width: 1500px;
+}
+.nsm-dialog-full {
+  max-width: 100%;
+}
+
+.is-danger {
+  color: #ff0000;
+  clear: left;
+}
+
+.clear-both {
+  clear: both;
+}
+
+.gallery ul {
+  padding-left: 0;
+}
+.gallery li {
+  display: inline-block;
+  margin: 5px;
+  list-style: none;
+  position: relative;
+}
+.gallery a.no-select {
+  cursor: pointer;
+}
+.gallery img {
+  border: 2px solid #aaaaaa;
+  height: 100px;
+  margin: 10px;
+}
+.left_data{display: inline-block;
+    width: 80%;}
+    .right_data{display: inline-block;
+    width: 15%;
+    float: right;}
+    .right_data em{font-size: 30px;
+    color: #a39e9e;}
+
+.left_data span{font-size: 24px;
+    color: #bdbdbd;}
+    .left_data h5{font-size: 18px;
+    color: #807979;}
+   .left_data small {font-size: 13px;}
+   .widget_date{ text-align: center; }
+   .widget_date h5{    font-size: 20px;
+    margin-bottom: 5px;}
+   .widget_date small{    font-size: 13px;
+    color: #121212;}
+   .widget_date h6{font-size: 30px;
+    color: #01dcff;}
+   .widget_date span{font-size: 12px;}
+
+
+.gallery img.selected {
+  border-color: #00ffff;
+}
+
+.gallery .image-delete-button {
+  position: absolute;
+  display: block;
+  top: 0;
+  right: 7px;
+  color: #ff0000;
+  z-index: 99;
+  font-size: 18px;
+  line-height: 18px;
+}
+
+.related-product-image {
+  height: 32px;
+}
+
+.table-row-icon {
+  width: 50px;
+}
+.table-row-icon img {
+  width: 100%;
+}
+
+fieldset {
+  margin-bottom: 50px;
+}
+
+.tab-content {
+  padding: 20px;
+  background-color: #ffffff;
+}
+
+.normal-link i {
+  font-size: 1.6rem;
+}
+
+.advance-wb {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.campaign-products-datatable.ngx-datatable .datatable-header-cell-template-wrap {
+  text-align: center;
+}
+
+.campaign-products-datatable.ngx-datatable .datatable-body-cell {
+  justify-content: center;
+}
+
+.toast-msg {
+  position: fixed;
+  right: 20px;
+  width: 340px;
+  padding: .75rem 1.25rem;
+  margin-top: 1rem;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  animation: move 2s both;
+  z-index: 1005;
+  top: 70px;
+}

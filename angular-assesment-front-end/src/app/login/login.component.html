@@ -1,0 +1,67 @@
+<div class="container-fluid login-container h-100">
+  <div class="row flex-row h-100 bg-white login-row">
+    <!-- Begin Left Content -->
+    <div class="col-xl-8 col-lg-6 col-md-6 login-header-col">
+      <div class="overlay-image"></div>
+<!--      <img src="assets/img/Clip.png" class="login-image">-->
+      <img src="assets/img/Shape-1.png" class="login-wave">
+      <img src="assets/img/SolvPath-Logo-White.png" class="login-logo">
+      <h1 class="login-title">Welcome to Solvpath</h1>
+    </div>
+    <!-- End Left Content -->
+    <!-- Begin Right Content -->
+    <div class="col-xl-4 col-lg-6 col-md-6 regist-form my-auto login-form">
+      <!-- Begin Form -->
+      <div class="authentication-form mx-auto">
+        <div class="colored-logo-container">
+          <img src="assets/img/SolvPath-Logo.png" class="colored-logo">
+        </div>
+        <app-alert></app-alert>
+        <h3 class="sign-in-txt">Sign In</h3>
+        <form [formGroup]="form" (ngSubmit)="login()" novalidate>
+          <div class="group material-input">
+            <input type="text" [ngClass]="{'field-valid': isFieldValid('username'), 'field-invalid': isFieldInvalid('username') }" formControlName="username" id="email" required />
+            <label for="email">{{getAppropriateError('username')? getAppropriateError('username'): 'Email *'}}</label>
+            <i class="fa email-validator" [ngClass]="{'fa-check': isFieldValid('username'), 'fa-close': isFieldInvalid('username') }"></i>
+          </div>
+          <div class="group material-input">
+            <input type="password" [ngClass]="{'field-valid': isFieldValid('password'), 'field-invalid': isFieldInvalid('password') }" formControlName="password" id="password" required />
+            <label for="password">{{getAppropriateError('password')? getAppropriateError('password'): 'Password *'}}</label>
+          </div>
+          <div class="mb-3 terms-servce">
+            <label>By logging in,<br> you agree to the <a href="#" data-toggle="modal" data-target="#termsModal">Terms and Conditions</a></label>
+            <a class="forgot-password hyperlink" [routerLink]="['/password', 'reset']">Forgot password?</a>
+          </div>
+          <div class="sign-btn text-center">
+            <button [disabled]="loading || isLoggedIn()" class="btn btn-lg btn-primary login-btn">
+              Login
+            </button>
+            <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+          </div>
+        </form>
+
+        <div class="modal terms-modal" tabindex="-1" id="termsModal" role="dialog">
+          <div class="modal-dialog modal-dialog-centered nsm-dialog-xl" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Terms of Service</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <terms-and-conditions></terms-and-conditions>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Form -->
+    </div>
+    <!-- End Right Content -->
+  </div>
+  <!-- End Row -->
+</div>

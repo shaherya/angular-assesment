@@ -1,0 +1,31 @@
+#nav-left {
+  padding: 20px 0 0 0;
+  border-right: 1px solid #e7e7e7;
+}
+
+.jumbotron {
+  background-color: #fff;
+}
+
+#main {
+  background-color: #eee;
+  min-height: 700px;
+}
+a { color: #fff !important; }
+
+.notification-container {
+  padding: 10px 16px;
+  text-align: center;
+  position: fixed;
+  right: 0;
+  z-index: 999;
+  width: calc(100% - 240px);
+}
+
+.active .notification-container {
+  width: calc(100% - 90px);
+}
+
+.notification-container .message {
+  color: #ffffff;
+}

@@ -1,0 +1,29 @@
+<div class="row self-service-rate-row">
+  <div class="col-xl-4 col-lg-5 col-md-4 sessions-chart donut-chart-container">
+    <canvas class="canvas-max-w-h" width="300" height="300" id="sessions" baseChart
+            chartType="doughnut"
+            [legend]="sessionsChartData.chartLegend"
+            [labels]="sessionsChartData.labels"
+            [datasets]="[sessionsChartData.dataset]"
+            [options]="chartOptions">
+    </canvas>
+    <div class="sessions-chart-success-rate self-service-rate-col">
+      <div class="font-weight-bold services-text">{{getSuccessfulSessionRate()}}%</div>
+      <div class="textLight">Successful</div>
+    </div>
+  </div>
+  <div class="col-xl-8 col-lg-7 col-md-8 sessions-desc">
+    <table class="table table-inverse session-table">
+      <tbody>
+      <tr *ngFor="let label of sessionsChartData.labels; let i = index;">
+        <td class="sessions-text pl-3 position-relative pl-0">{{label}}
+          <div class="chart-legend-color"
+               [style.border-color]="sessionsChartData.dataset.backgroundColor[i]"></div>
+        </td>
+        <td class="text-right text-light-custom">{{getPieDataPercent(sessionsChartData.dataset.data, i)}}%</td>
+        <td class="text-right text-light-custom">{{sessionsChartData.dataset.data[i]}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

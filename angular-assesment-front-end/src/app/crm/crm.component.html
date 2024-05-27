@@ -1,0 +1,24 @@
+<div class="table-responsive bg-white-rounded">
+  <table *ngIf="(crms$ | async)?.length" class="table mb-0">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th class="actions-column">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let crm of crms$ | async">
+        <td><span class="text-primary">{{crm.name}}</span></td>
+        <td class="td-actions">
+          <a class="action-link" [routerLink]="['/campaign-products', {crm: crm.id}]" title="Products"><i class="fa fa-shopping-bag"></i></a>
+          <a class="action-link" href="javascript:void(0);" (click)="sync(crm)" title="Sync"><i class="fa fa-refresh" [ngClass]="{'fa-spin': isBusySyncing(crm)}"></i></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- End Default -->
+  <div>
+    <a href="javascript:void(0);" (click)="goBack()" class="btn btn-secondary crm-back-btn">Back</a>
+  </div>
+  <app-pager [page]="page" [pageCount]="pageCount" (pageChange)="onPageChange($event)"></app-pager>
+</div>

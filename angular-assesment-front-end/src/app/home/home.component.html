@@ -1,0 +1,194 @@
+<div class="container-fluid pt-0 px-0">
+  <div class="loader" *ngIf="loading">
+    <img src="assets/img/processing.gif" class="loader-img">
+  </div>
+  <div class="row">
+    <div class="select-user-and-campaign col-md-3">
+      <div class="select-wrapper form-group select-campaign">
+        <select class="form-control" (change)="onCampaignChange($event)">
+          <option value="">All Brands</option>
+          <option *ngFor="let campaign of campaigns" [value]="campaign.id"
+                  [selected]="selectedFilters.campaign_id === campaign.id.toString()">
+            {{campaign.display_name}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="ml-auto date-range-filter mb-2 col-md-9">
+      <form class="dashboard-filters-form">
+        <div class="d-flex justify-content-end">
+          <div class="mr-3 form-group" ngbDropdown>
+            <button class="btn btn-primary mr-0 quickrangeBtn" id="dropdownBasic1" ngbDropdownToggle>Quick Range <em
+              class="fa fa-angle-down font-weight-bold ml-1"></em></button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <a href="#" (click)="setDateRangeToToday()" ngbDropdownItem>Today</a>
+              <a href="#" (click)="setDateRangeToYesterday()" ngbDropdownItem>Yesterday</a>
+              <a href="#" (click)="setDateRangeToLastNDays(7)" ngbDropdownItem>Past 7 Days</a>
+              <a href="#" (click)="setDateRangeToCurrentMonth()" ngbDropdownItem>Month to Date</a>
+              <a href="#" (click)="setDateRangeToLastMonth()" ngbDropdownItem>Last Month</a>
+              <a href="#" (click)="setDateRangeToNPastMonthsToDate(1)" ngbDropdownItem>Last Month to Date</a>
+              <a href="#" (click)="setDateRangeToNPastMonthsToDate(3)" ngbDropdownItem>Last 3 Months to Date</a>
+              <a href="#" (click)="setDateRangeToNPastMonthsToDate(6)" ngbDropdownItem>Last 6 Months to Date</a>
+              <a href="#" (click)="setDateRangeToNPastMonthsToDate(12)" ngbDropdownItem>Last 12 Months to Date</a>
+              <a href="#" (click)="setDateRangeToCurrentYear()" ngbDropdownItem>Year to Date</a>
+              <a href="#" (click)="setDateRangeToLastYear()" ngbDropdownItem>Last Year</a>
+            </div>
+          </div>
+          <div class="form-group mr-3">
+            <div class="border input-group bg-white datePickerCol">
+              <div class="input-group-append">
+                <button class="btn la la-calendar-o mr-0 pb-0 pl-2 pr-2 pt-0 datePickerIcon" (click)="dpStart.toggle()"
+                        type="button"></button>
+              </div>
+              <input
+                class="home-date-field"
+                ngbDatepicker
+                name="start_date_picker"
+                [(ngModel)]="startDate"
+                (ngModelChange)="parseStartDate($event)"
+                #dpStart="ngbDatepicker"
+              >
+              <input
+                class="form-control border-0 pl-0"
+                type="text"
+                placeholder="mm/dd/yyyy"
+                (click)="dpStart.toggle()"
+                #startDateText
+                name="start_date"
+                [value]="startDateDisplayString"
+              >
+            </div>
+          </div>
+          <div class="form-group mr-3">
+            <div class="border input-group bg-white datePickerCol">
+              <div class="input-group-append">
+                <button class="btn la la-calendar-o mr-0 pb-0 pl-2 pr-2 pt-0 datePickerIcon" (click)="dpEnd.toggle()"
+                        type="button"></button>
+              </div>
+              <input
+                class="home-date-field"
+                ngbDatepicker
+                #dpEnd="ngbDatepicker"
+                name="end_date_picker"
+                [(ngModel)]="endDate"
+                (ngModelChange)="parseEndDate($event)"
+              >
+              <input
+                class="form-control border-0 pl-0"
+                type="text"
+                placeholder="mm/dd/yyyy"
+                (click)="dpEnd.toggle()"
+                #endDateText
+                name="end_date"
+                [value]="endDateDisplayString"
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="select-wrapper">
+              <select autocomplete="on" id="timezone" class="form-control" (change)="changeTimezone($event)">
+                <option [ngValue]="null">-- Please Select --</option>
+                <option *ngFor="let timezone of timezones" [value]="timezone"
+                        [selected]="selectedFilters.timezone === timezone">{{timezone}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row mb-lg-4">
+    <div class="col-12 col-lg-6 d-flex self-service-rate">
+      <div class="card w-100 custom-card">
+        <div class="card-body">
+          <div class="font-weight-bold mb-3 mb-lg-4">
+            <h3 class="card-title font-weight-bold">Self Service Rate</h3>
+          </div>
+          <div class="row align-items-center self-service-rate-row">
+            <div class="col-xl-8 col-lg-7 col-md-8 self-service-rate-col pr-0">
+              <span class="d-block font-weight-bold ssr-text mb-3">{{getSelfServeRate()}}%</span>
+              <p class="textLight mb-0">of people are able to self-serve themselves rather than talking to a live representative.</p>
+            </div>
+            <div class="col-xl-4 col-lg-5 col-md-4 self-service-rate-chart">
+              <i class="fa fa-map-marker" id="gauge-needle"
+                 [ngStyle]="{'transform': 'rotate(' + gaugeRotateAngle + 'rad)'}"></i>
+              <canvas class="canvas-max-w-h" width="300" height="300" id="self-services-rate" baseChart
+                      chartType="doughnut"
+                      [legend]="chartLegend"
+                      [datasets]="chartData.datasets1"
+                      [options]="gaugeOptions">
+              </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-6 d-flex sessions-col mt-lg-0 mt-4">
+      <div class="card w-100 custom-card">
+        <div class="card-body">
+          <div class="font-weight-bold mb-3 mb-lg-4">
+            <h3 class="card-title font-weight-bold">Sessions</h3>
+          </div>
+          <session-results [selectedFilters]="selectedFilters" (updateSessionChartData)="updateSessionChartData($event)"></session-results>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-3 col-sm-6 inbounds-col mt-lg-0 mt-4">
+      <div class="card custom-card inbounds-bg">
+        <div class="card-body">
+          <div class="d-flex justify-content-between inb-head align-items-center">
+            <div class="inb-count">
+              <h5>{{getPhoneSessionCount()}}</h5>
+              <p class="mb-0 text-light-custom">Phone calls</p>
+            </div>
+            <div class="inb-icon ml-2"><em class="fa fa-phone home-phone-calls"></em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 inbounds-col mt-lg-0 mt-4">
+      <div class="card custom-card inbounds-bg">
+        <div class="card-body">
+          <div class="d-flex justify-content-between inb-head align-items-center">
+            <div class="inb-count">
+              <h5>{{getEmailSessionCount()}}</h5>
+              <p class="mb-0 text-light-custom">Emails</p>
+            </div>
+            <div class="inb-icon ml-2"><em class="fa fa-envelope home-email-icon"></em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 inbounds-col mt-lg-0 mt-4">
+      <div class="card custom-card h-100 inbounds-bg">
+        <div class="card-body">
+          <div class="d-flex justify-content-between inb-head align-items-center">
+            <div class="inb-count">
+              <h5>{{getWebSessionCount()}}</h5>
+              <p class="mb-0 text-light-custom">Direct Links</p>
+            </div>
+            <div class="inb-icon ml-2"><em class="fa fa-link home-direct-links-icon"></em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 inbounds-col mt-lg-0 mt-4">
+      <div class="card custom-card inbounds-bg">
+        <div class="card-body">
+          <div class="d-flex justify-content-between inb-head align-items-center">
+            <div class="inb-count">
+              <h5>{{getSocialMediaSessionCount()}}</h5>
+              <p class="mb-0 text-light-custom">Social Messages</p>
+            </div>
+            <div class="inb-icon ml-2"><em class="fa fa-comments-o home-social-messages-icon"></em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- End Container -->
+

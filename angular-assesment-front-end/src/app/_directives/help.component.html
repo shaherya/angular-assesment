@@ -1,0 +1,7 @@
+<span class="help" href="javascript:void(0);">
+  <a href="javascript:void(0);" (click)="show(true)"><i class="fa fa-question-circle"></i></a>
+  <div [class.visible]="isVisible">
+    <ng-content></ng-content>
+    <a class="help-close-button" href="javascript:void(0);" (click)="show(false)"><i class="fa fa-times-circle"></i></a>
+  </div>
+</span>

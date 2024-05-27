@@ -1,0 +1,33 @@
+.help {
+  position: relative;
+}
+
+.help > div {
+  position: absolute;
+  border: 2px solid #808080;
+  border-radius: 3px;
+  background-color: #ffffff;
+  padding: 10px;
+  width: 300px;
+  top: 0;
+  left: 0;
+  font-weight: normal;
+  z-index: 999;
+  display: none;
+}
+.help > div.visible {
+  display: block;
+}
+
+.help .help-close-button {
+  position: absolute;
+  display: block;
+  top: -8px;
+  right: -5px;
+  z-index: 99;
+  font-size: 18px;
+  line-height: 18px;
+  color: #ff0000;
+  background-color: #ffffff;
+  border-radius: 25px;
+}

@@ -1,0 +1,9 @@
+.addresses-container {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.addresses-container .subtitle {
+  margin-bottom: 0;
+  margin-left: 0;
+}

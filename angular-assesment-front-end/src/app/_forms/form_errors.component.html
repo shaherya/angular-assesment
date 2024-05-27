@@ -1,0 +1,3 @@
+<div *ngFor="let e of errors" class="notification is-danger">
+  {{'errors.messages.' + e.error | translate:e.params}}
+</div>

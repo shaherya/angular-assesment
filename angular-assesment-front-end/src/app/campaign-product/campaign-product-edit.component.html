@@ -1,0 +1,209 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="bg-white-rounded" novalidate>
+  <app-form-errors [errors]="formErrors()"></app-form-errors>
+  <ngb-tabset [destroyOnHide]="false" *ngIf="ready">
+    <ngb-tab title="Basic Info">
+      <ng-template ngbTabContent>
+        <div *ngIf="campaignProduct">
+          <img class="product-image" [src]="getProductImageUrl()" alt="" />
+          <div *ngIf="crm" class="form-group"><label>CRM:</label>&nbsp;<a [routerLink]="['/crm', 'edit', campaignProduct.crm]">{{crm.name}}</a></div>
+          <div *ngIf="crmCampaign" class="form-group"><label>Campaign:</label> {{crmCampaign.name}} ({{crmCampaign.crm_campaign_id}})</div>
+          <div class="form-group"><label>Campaign Product ID:</label> {{campaignProduct.campaign_product_id}}</div>
+          <div class="form-group"><label>Product ID:</label> {{campaignProduct.product.product_id}}</div>
+          <div class="form-group"><label>SKU:</label> {{campaignProduct.product.sku}}</div>
+          <div class="form-group"><label>Price:</label> ${{campaignProduct.price}}</div>
+          <div class="form-group"><label>Shipping Price:</label> ${{campaignProduct.shipping_price}}</div>
+          <div class="form-group"><label>CRM Product Type:</label> {{getCRMProductType()}}</div>
+          <div class="form-group"><label>Trial Type:</label> {{getTrialType()}}</div>
+          <div class="form-group"><label>Billing Cycle Type:</label> {{getBillingCycleType()}}</div>
+          <div class="form-group"><label>Fulfillment Type:</label> {{getFulfillmentType()}}</div>
+          <div class="form-group"><label>CRM Fulfillment Quantity:</label> {{campaignProduct.product.crm_quantity}}</div>
+          <div *ngIf="campaignProduct.final_billing_cycle" class="form-group"><label>Final Billing Cycle:</label> {{campaignProduct.final_billing_cycle}}</div>
+        </div>
+        <div class="form-group">
+          <label for="product-name">Name</label>
+          <input id="product-name" type="text" class="form-control" formControlName="name" />
+          <app-field-errors [errors]="fieldErrors('name')"></app-field-errors>
+        </div>
+        <div class="form-group">
+          <label for="offer_name">Offer Name
+            <app-help>
+              Enter an offer name for this campaign product.  Leave blank to use the same product name.
+            </app-help>
+          </label>
+          <input id="offer_name" type="text" class="form-control" formControlName="offer_name" />
+          <app-field-errors [errors]="fieldErrors('offer_name')"></app-field-errors>
+        </div>
+        <div class="form-group">
+          <label for="override_process_type">Override Processing Type
+            <app-help>
+              Select the processing type of this campaign product.  Leave blank to use the processing type of the base product.
+            </app-help>
+          </label>
+          <div class="select-wrapper">
+            <select id="override_process_type" class="form-control" formControlName="override_process_type">
+              <option [ngValue]="null">Use Base Product Process Type</option>
+              <option *ngFor="let type of processTypes" [value]="type.value">{{type.label}}</option>
+            </select>
+          </div>
+          <app-field-errors [errors]="fieldErrors('override_process_type')"></app-field-errors>
+        </div>
+        <div class="form-group">
+          <label for="third_party_recurring">
+            <input id="third_party_recurring" type="checkbox" [checked]="isBooleanFieldChecked('third_party_recurring')"
+                   (change)="toggleBooleanField($event, 'third_party_recurring')"/>
+            3rd Party Recurring
+            <app-help>
+              Check if this product is handled as a subscription by a 3rd party.
+            </app-help>
+          </label>
+        </div>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Path Settings">
+      <ng-template ngbTabContent>
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select id="status" class="form-control" formControlName="status">
+            <option *ngFor="let status of statuses" [value]="status.value">{{status.label}}</option>
+          </select>
+          <app-field-errors [errors]="fieldErrors('status')"></app-field-errors>
+        </div>
+        <div class="form-group">
+          <label for="min_price">Minimum Price
+            <app-help>
+              Enter a minimum price for this product.  Discounts will be prevented from going below this price.
+              If there is a minimum price defined on the CRM or the base product that is greater than this value, it will be used instead.
+            </app-help>
+          </label>
+          <input id="min_price" type="text" class="form-control" formControlName="min_price" />
+          <app-field-errors [errors]="fieldErrors('min_price')"></app-field-errors>
+        </div>
+        <div class="form-group">
+          <label for="override_price">Override Price
+            <app-help>
+              Enter a price for this product that will override the price defined in the CRM.<br/>
+              Leave blank to use the price defined in the CRM.
+            </app-help>
+          </label>
+          <input id="override_price" type="text" class="form-control" formControlName="override_price" />
+          <app-field-errors [errors]="fieldErrors('override_price')"></app-field-errors>
+        </div>
+        <div class="form-group">
+          <label for="override_shipping_price">Override Shipping Price
+            <app-help>
+              Enter a shipping price for this product that will override the shipping price defined in the CRM.<br/>
+              Leave blank to use the shipping price defined in the CRM.
+            </app-help>
+          </label>
+          <input id="override_shipping_price" type="text" class="form-control" formControlName="override_shipping_price" />
+          <app-field-errors [errors]="fieldErrors('override_shipping_price')"></app-field-errors>
+        </div>
+        <div class="form-group">
+          <label for="retail_price">Retail Price
+            <app-help>
+              Enter a fixed retail price for this product to use for display of retail price and savings in path variables.<br/>
+              Leaving this blank will use the original price paid for the item.
+            </app-help>
+          </label>
+          <input id="retail_price" type="text" class="form-control" formControlName="retail_price" />
+          <app-field-errors [errors]="fieldErrors('retail_price')"></app-field-errors>
+        </div>
+        <div class="form-group">
+          <label for="override_product_type">Override Product Type
+            <app-help>
+              Optionally select a product type for this product that will override the product type defined in the CRM.
+            </app-help>
+          </label>
+          <select id="override_product_type" class="form-control" formControlName="override_product_type">
+            <option [ngValue]="null">Use CRM Product Type</option>
+            <option *ngFor="let type of overrideProductTypes" [value]="type.value">{{type.label}}</option>
+          </select>
+          <app-field-errors [errors]="fieldErrors('override_product_type')"></app-field-errors>
+        </div>
+        <div class="form-group">
+          <label for="subscription_display_type">Subscription Display
+            <app-help>
+              Select when subscription status should be displayed.
+            </app-help>
+          </label>
+          <select id="subscription_display_type" class="form-control" formControlName="subscription_display_type">
+            <option *ngFor="let type of subscriptionDisplayTypes" [value]="type.value">{{type.label}}</option>
+          </select>
+          <app-field-errors [errors]="fieldErrors('subscription_display_type')"></app-field-errors>
+        </div>
+        <div class="form-group">
+          <label for="show_next_bill_price">
+            <input id="show_next_bill_price" type="checkbox" [checked]="isBooleanFieldChecked('show_next_bill_price')"
+                   (change)="toggleBooleanField($event, 'show_next_bill_price')"/>
+            Show next billing cycle date and price
+            <app-help>
+              Check if next billing cycle date and price should be shown along with subscription status
+            </app-help>
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="max_quantity">Maximum Quantity
+            <app-help>
+              Enter a maximum quantity for this product.
+              If there is a maximum quantity defined on the CRM that is less than this value, it will be used instead.
+            </app-help>
+          </label>
+          <input id="max_quantity" type="number" class="form-control" formControlName="max_quantity" />
+          <app-field-errors [errors]="fieldErrors('max_quantity')"></app-field-errors>
+        </div>
+        <div class="form-group">
+          <label for="return_days">Days to Return
+            <app-help>
+              Enter the number of days to allow a product to be returned.
+              The number of days to return will start on the day the product is delivered.
+              Leave blank to use the value defined on the brand.
+            </app-help>
+          </label>
+          <input id="return_days" type="number" class="form-control" formControlName="return_days" />
+          <app-field-errors [errors]="fieldErrors('return_days')"></app-field-errors>
+        </div>
+        <div class="form-group">
+          <label for="exchange_days">Days to Exchange
+            <app-help>
+              Enter the number of days to allow a product to be exchanged.
+              The number of days to exchange will start on the day the product is delivered.
+              Leave blank to use the value defined on the brand.
+            </app-help>
+          </label>
+          <input id="exchange_days" type="number" class="form-control" formControlName="exchange_days" />
+          <app-field-errors [errors]="fieldErrors('exchange_days')"></app-field-errors>
+        </div>
+        <div class="form-group">
+          <label for="max_extra_return_days">Maximum Extra Days to Return or Exchange
+            <app-help>
+              Enter the maximum number of days to allow extending the return or exchange date.
+              Leave blank to use the value defined on the brand.
+            </app-help>
+          </label>
+          <input id="max_extra_return_days" type="number" class="form-control" formControlName="max_extra_return_days" />
+          <app-field-errors [errors]="fieldErrors('max_extra_return_days')"></app-field-errors>
+        </div>
+        <div class="form-group">
+          <label for="restock_fee">Restocking Fee
+            <app-help>
+              Enter a restocking fee for this product that will override the restocking fee for the brand.
+              Leave blank to use the restocking fee defined on the brand.
+            </app-help>
+          </label>
+          <input id="restock_fee" type="text" class="form-control" formControlName="restock_fee" />
+          <app-field-errors [errors]="fieldErrors('restock_fee')"></app-field-errors>
+        </div>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+  <div class="form-group existing-products-action-btn">
+    <button type="submit" [disabled]="loading || !allFormsValid" class="btn btn-primary">Save</button>
+    <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+    <a href="javascript:void(0);" (click)="onCancel.emit()" class="btn btn-secondary">Cancel</a>
+  </div>
+  <div class="form-group">
+    <button type="submit" [disabled]="loading || !allFormsValid" class="btn btn-primary">Save</button>
+    <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+    <a href="javascript:void(0);" (click)="onCancel.emit()" class="btn btn-secondary">Cancel</a>
+  </div>
+</form>
